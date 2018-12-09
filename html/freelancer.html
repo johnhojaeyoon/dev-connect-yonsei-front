@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>DevConnect</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Favicons -->
+    <link href="../img/favicon.png" rel="icon">
+    <link href="rsc/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700|Open+Sans:300,300i,400,400i,700,700i" rel="stylesheet">
+    <!-- Bootstrap CSS File -->
+    <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Main Stylesheet File -->
+    <link href="../css/signup.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="../tabulator-master/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../tabulator-master/dist/js/tabulator.min.js"></script>
+
+
+    <style type="text/css">
+        .gradient-background {
+            background: #0575E6;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #021B79, #0575E6);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #021B79, #0575E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+
+        .vertical-center {
+            min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+            display: flex;
+            align-items: center;
+        }
+
+        a:hover{
+            color: blue;
+            text-decoration: underline;
+        }
+        .loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+    </style>
+    <script type="text/javascript">
+        let freelancer_idx = localStorage.getItem('freelancer_idx');
+
+        if(!freelancer_idx){
+            alert('Access Denied');
+            window.location.href = 'access-denied.html';
+        }
+
+        const ajax = axios.create({
+            baseURL: 'https://dev-connect-yonsei.herokuapp.com/api',
+            headers: {'Access-Control-Allow-Origin': '*'}
+        });
+
+    </script>
+
+</head>
+
+<body>
+<header id="header" class="header-fixed">
+    <div class="container" style="width: 100%; height: 100%">
+        <div id="logo" class="pull-left">
+            <h1><a href="index.html" class="scrollto">DevConnect</a></h1>
+        </div>
+
+        <nav id="nav-menu-container">
+            <ul class="nav-menu">
+                <li><a href="#">Profile</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </nav><!-- #nav-menu-container -->
+    </div>
+</header><!-- #header -->
+
+<div class="jumbotron gradient-background" style="margin-top: 72px">
+    <h2 class="display-6" style="text-align: center; margin-bottom: 30px; color: white">Hello user, 0000@gmail.com</h2>
+    <div class="align-content-center">
+        <div class="row justify-content-md-center vertical-center">
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer.html'">Main</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer-profile.html'">Edit Profile</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer-add-project.html'">Add Project</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer-add-team.html'">Search Teams</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer-create-team.html'">Create Team</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <h4><strong>My Projects</strong></h4>
+    <hr>
+    <div id="table-myProjects"></div>
+
+    <h4><strong>All Internal Projects</strong></h4>
+    <hr>
+    <div id="table-allProjects"></div>
+    <h4><strong>Applicable Projects</strong></h4>
+    <hr>
+    <div id="table-applicableProjects"></div>
+</div>
+<div id='loader' class="loader" style="margin: auto; z-index: 1; position: absolute; left: 40%; top: 50%"></div>
+
+<script type="text/javascript">
+
+    $("a").on('click', function(e) {
+        let tr = $(this).closest("tr");
+        // get project name
+        let tn = tr.children('th').text();
+        let url = 'project.html?projectName=' + tn;
+        location.href=url;
+    });
+
+    $('#logout').click(function(){
+        localStorage.clear();
+        alert('Bye Bye');
+        window.location.href = "index.html";
+    });
+
+    function allProjectLoader(){
+        let allprojects = [];
+        ajax.get('/freelancer/project/getAll')
+            .then(function (response) {
+                if(response.data.success == true){
+                    let projects = response.data.projects;
+                    for(let i=0; i<projects.length; i++){
+                        allprojects.push({
+                            name: projects[i].name,
+                            start_date: projects[i].start_date,
+                            end_date: projects[i].end_date,
+                            minmax: projects[i].min_part + "/" + projects[i].max_part,
+                            experience: projects[i].experience,
+                            pay: projects[i].pay,
+                            url: `<a href='project.html?type=internal&idx=${projects[i].idx}'>Go To</a>`
+                        });
+                    }
+                    let all_projects = new Tabulator("#table-allProjects", {
+                        height:205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+                        data:allprojects, //assign data to table
+                        layout:"fitColumns", //fit columns to width of table (optional)
+                        columns:[ //Define Table Columns
+                            {title:"Name", field:"name", width:150},
+                            {title:"Start Date", field:"start_date", align:"left", sorter:"date"},
+                            {title:"End Date", field:"end_date", sorter:"date"},
+                            {title:"Min/Max", field:"minmax", align:"center"},
+                            {title:"Experience", field:"experience", align:"center"},
+                            {title:"Pay", field:"pay",  align:"center"},
+                            {title:"Visit", field:"url", formatter:"html", align:"center"}
+                        ]
+
+                    });
+
+                } else {
+                    console.log('Error');
+                }
+            })
+            .catch(function (error) {
+                console.log('Server Error');
+                console.log(error);
+            });
+    }
+
+    function myProjectLoader(){
+        let myfinishedprojects = [];
+        let freelancer_idx = localStorage.getItem('freelancer_idx');
+        ajax.post('/freelancer/portfolio/getAll', {
+            freelancer_idx: freelancer_idx,
+            sort_scheme: 'start_date',
+            asc_desc: 'asc'
+        })
+            .then(function (response) {
+                console.log(response);
+                if(response.data.success == true){
+                    let internal = response.data.internal;
+                    let external = response.data.external;
+                    for(let i=0; i<internal.length; i++){
+                        myfinishedprojects.push({
+                            flag: 'Internal',
+                            name: internal[i].name,
+                            start_date: internal[i].start_date,
+                            end_date: internal[i].end_date,
+                            pay: internal[i].pay,
+                            url: `<a href='project.html?type=internal&idx=${internal[i].idx}'>Go To</a>`
+                        });
+                    }
+                    for(let i=0; i<external.length; i++){
+                        myfinishedprojects.push({
+                            flag: 'External',
+                            name: external[i].name,
+                            start_date: external[i].start_date,
+                            end_date: external[i].end_date,
+                            pay: external[i].pay,
+                            url: `<a href='project.html?type=external&idx=${external[i].idx}'>Go To</a>`
+
+                        });
+                    }
+                    let my_projects = new Tabulator("#table-myProjects", {
+                        height:205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+                        data: myfinishedprojects, //assign data to table
+                        layout:"fitColumns", //fit columns to width of table (optional)
+                        columns:[ //Define Table Columns
+                            {title:"Flag", field:"flag", width:70, formatter:function(cell, formatterParams){
+                                    let value = cell.getValue();
+                                    if(value == 'Internal'){
+                                        return "<span style='color:red; font-weight:bold;'>" + value + "</span>";
+                                    }else{
+                                        return "<span style='color:blue; font-weight:bold;'>" + value + "</span>";
+                                    }
+                                }},
+                            {title:"Name", field:"name", width:150},
+                            {title:"Start Date", field:"start_date", align:"left", sorter:"date"},
+                            {title:"End Date", field:"end_date", sorter:"date"},
+                            {title:"Pay", field:"pay",  align:"center"},
+                            {title:"Visit", field:"url", sorter:"date", formatter:"html", align:"center"},
+                        ]
+                    });
+
+                } else {
+                    console.log('Error');
+                }
+            })
+            .catch(function (error) {
+                console.log('Server Error');
+                console.log(error);
+            });
+    }
+
+    function applicableProjectLoader(){
+        let project = [];
+        let freelancer_idx = localStorage.getItem('freelancer_idx');
+        ajax.post('/freelancer/project/getForMe', {
+            freelancer_idx: freelancer_idx
+        })
+            .then(function (response) {
+                console.log(response);
+                if(response.data.success == true){
+                    let projects = response.data.projects;
+
+                    for(let i=0; i<projects.length; i++){
+                        project.push({
+                            name: projects[i].name,
+                            start_date: projects[i].start_date,
+                            end_date: projects[i].end_date,
+                            minmax: projects[i].min_part + "/" + projects[i].max_part,
+                            experience: projects[i].experience,
+                            pay: projects[i].pay,
+                            url: `<a href='project.html?type=internal&idx=${projects[i].idx}'>Go To</a>`,
+                            signup: '<button class="project-signup">Sign Up</button>'
+
+                        });
+                    }
+                    let my_projects = new Tabulator("#table-applicableProjects", {
+                        height:205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+                        data: project, //assign data to table
+                        layout:"fitColumns", //fit columns to width of table (optional)
+                        columns:[ //Define Table Columns
+                            {title:"Name", field:"name", width:150},
+                            {title:"Start Date", field:"start_date", align:"left", sorter:"date"},
+                            {title:"End Date", field:"end_date", sorter:"date"},
+                            {title:"Min/Max", field:"minmax", align:"center"},
+                            {title:"Experience", field:"experience", align:"center"},
+                            {title:"Pay", field:"pay",  align:"center"},
+                            {title:"Visit", field:"url", formatter:"html", align:"center"},
+                            {title:"Signup", field:"signup", formatter:"html", align:"center"}
+                        ]
+                    });
+
+                } else {
+                    console.log('Error');
+                }
+            })
+            .catch(function (error) {
+                console.log('Server Error');
+                console.log(error);
+            });
+
+    }
+
+    myProjectLoader();
+    allProjectLoader();
+    applicableProjectLoader();
+    $('#loader').css('display','none');
+
+</script>
+
+
+</body>
+</html>

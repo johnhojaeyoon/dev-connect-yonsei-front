@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>DevConnect</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <link href="../tabulator-master/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../tabulator-master/dist/js/tabulator.min.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Favicons -->
+    <link href="../img/favicon.png" rel="icon">
+    <link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700|Open+Sans:300,300i,400,400i,700,700i" rel="stylesheet">
+    <!-- Bootstrap CSS File -->
+
+    <!-- Main Stylesheet File -->
+    <link href="../css/signup.css" rel="stylesheet">
+    <script type="text/javascript">
+        const ajax = axios.create({
+            baseURL: 'https://dev-connect-yonsei.herokuapp.com/api',
+            headers: {'Access-Control-Allow-Origin': '*'}
+        });
+    </script>
+
+</head>
+
+<body>
+<header id="header" class="header-fixed">
+    <div class="container" style="width: 100%; height: 100%">
+        <div id="logo" class="pull-left">
+            <h1><a href="index.html" class="scrollto">DevConnect</a></h1>
+        </div>
+
+        <nav id="nav-menu-container">
+            <ul class="nav-menu">
+                <li class="menu-active"><a href="index.html">Home</a></li>
+                <li><a href="#login">Login</a></li>
+            </ul>
+        </nav><!-- #nav-menu-container -->
+    </div>
+</header><!-- #header -->
+<main>
+    <div class="container">
+        <form onsubmit="return false;">
+            <div class="row" style="margin-top: 15%">
+            <div class="col">
+                <h2>Let's get you signed up</h2>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="user-class">I am a</label>
+                        <select class="form-control" id="user-class" required>
+                            <option selected>Choose your role</option>
+                            <option>Client</option>
+                            <option>Freelancer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" placeholder="email" id="email">
+                        <div class="valid-feedback" >
+                            Good to Go
+                        </div>
+                        <div class="invalid-feedback">
+                            This email could already be in use<br>
+                            Please try again
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="****" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="password-reconfirm">Reconfirm Password</label>
+                        <input type="password" class="form-control" id="password-reconfirm" placeholder="****" required>
+                        <div class="invalid-feedback">
+                            Passwords don't match, try again
+                        </div>
+                        <div class="valid-feedback">
+                            Passwords match, good to go
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Johny Appleseed" required>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="col" id="freelancer-data" style="display: none">
+                    <h3>Please Provide Additional Freelancer Information</h3>
+                    <div class="col-sm-8 mb-3 form-row">
+                        <label for="freelancer-major">Major</label>
+                        <input type="text" class="form-control" id="freelancer-major" placeholder="Computer Science">
+                    </div>
+                    <div class="col-sm-8 mb-3 form-row">
+                        <label for="freelancer-age">Age</label>
+                        <input type="number" class="form-control" id="freelancer-age" placeholder="20">
+                    </div>
+                    <div class="col-sm-8 mb-3 form-row">
+                        <label for="freelancer-pn">Phone Number</label>
+                        <input type="text" class="form-control" id="freelancer-pn" placeholder="010-0000-0000">
+                    </div>
+                    <div class="col-sm-8 mb-3 form-row">
+                        <label for="freelancer-yoe">Years of Experience</label>
+                        <input type="number" class="form-control" id="freelancer-yoe">
+                    </div>
+                    <div>
+                        <label for="language">Select Languages You Know</label>
+                        <select id="language" class="selectpicker" multiple data-live-search="true">
+                            <option>Python</option>
+                            <option>Java</option>
+                            <option>Javascript</option>
+                            <option>Go</option>
+                            <option>C</option>
+                            <option>Perl</option>
+                            <option>C++</option>
+                            <option>Swift</option>
+                            <option>PHP</option>
+                            <option>LISP</option>
+                            <option>Kotlin</option>
+                        </select>
+                    </div>
+
+                    <div id="language-proficiency" style="margin-top: 5px">
+                        <label for="language">Enter Language Proficiency</label><br>
+                        <small>Input value in range 0-10</small>
+                    </div>
+                </div>
+                <div class="col" id="client-data" style="display: none">
+                    <h3>Please Provide Additional Client Information</h3>
+                    <div class="col-sm-8 mb-3 form-row">
+                        <label for="client-pn">Phone Number</label>
+                        <input type="text" class="form-control" id="client-pn" placeholder="010-0000-0000">
+                    </div>
+                </div>
+
+            </div>
+            </div>
+            <div class="row">
+                <button id='register' class="btn btn-primary" type="submit" style="margin-top: 10px; margin-left: 15px;" onclick="formValidate()">Register</button>
+            </div>
+            <div id='register-status' class="row" style="margin-top: 15px; margin-left: 1px">
+
+            </div>
+        </form>
+        <button id="test">123</button>
+
+    </div>
+</main>
+<script type="text/javascript">
+    let idCheck = true;
+    let table = null;
+
+    $('#unique-email')
+        .click(function(){
+            let email = $('#email').val();
+            let res = false;
+            if(res){
+                $('#email').addClass('is-valid');
+                idCheck = true;
+            } else{
+                $('#email').addClass('is-invalid');
+            }
+        });
+
+    $('#user-class')
+        .change(function(){
+            let sel = $('#user-class').val();
+            $('#freelancer-data')
+                .css('display','none');
+            $('#admin-data')
+                .css('display','none');
+            $('#client-data')
+                .css('display','none');
+
+            if(sel == 'Client'){
+                $('#client-data')
+                    .css('display','block');
+            } else if (sel == 'Freelancer'){
+                $('#freelancer-data')
+                    .css('display','block');
+            } else {
+                $('#admin-data')
+                    .css('display','block');
+            }
+        });
+
+
+    $("#password-reconfirm")
+        .change(function () {
+            let pw = $('#password').val();
+            let pw_reconfirm = $('#password-reconfirm').val();
+            if(pw == pw_reconfirm){
+                if($('#password-reconfirm').hasClass('is-invalid')){
+                    $('#password-reconfirm').removeClass('is-invalid');
+                }
+                $('#password-reconfirm').addClass('is-valid');
+            } else {
+                $('#password-reconfirm').addClass('is-invalid');
+            }
+        });
+
+    function formValidate(){
+        let user_class = $('#user-class').val();
+        let name = $('#name').val();
+        let email = $('#email').val();
+        let pw = $('#password').val();
+        switch(user_class){
+            case "Freelancer":
+                let freelancer_age = $('#freelancer-age').val();
+                let freelancer_major = $('#freelancer-major').val();
+                let freelancer_pn = $('#freelancer-pn').val();
+                let freelancer_yoe = $('#freelancer-yoe').val();
+                let proficiency = table.getData();
+                let language = [];
+                let language_idx = {
+                    'Python':1,
+                    'Java':2,
+                    'Javascript': 3,
+                    'C': 4,
+                    'C++':5,
+                    'Perl':6,
+                    'Go':7,
+                    'SWIFT': 8,
+                    'PHP': 9,
+                    'Kotlin': 10
+                };
+                for(let i=0; i<proficiency.length; i++){
+                    let l = {
+                        language_idx: language_idx[proficiency[i].language_name],
+                        proficiency: proficiency[i].proficiency
+                    };
+                    language.push(l);
+                }
+
+
+
+                ajax.post('/signup/freelancer', {
+                    email: email,
+                    password: pw,
+                    age: parseInt(freelancer_age),
+                    name: name,
+                    major: freelancer_major,
+                    phone: freelancer_pn,
+                    experience: parseInt(freelancer_yoe),
+                    languages: language
+                })
+                    .then(function (response) {
+                        if(response.data.success == true){
+                            console.log(response);
+                            localStorage['freelancer_idx'] = response.data.freelancer_idx;
+                            alert('Congratulations!!\n Your signup is complete');
+                            window.location.href = "freelancer.html";
+                        } else {
+                            invalid('Signup failed, please try again')
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                break;
+            case "Client":
+
+                let client_pn = $('#client-pn').val();
+                console.log(`${client_pn}`);
+
+                ajax.post('/signup/client', {
+                    email: email,
+                    password: pw,
+                    name: name,
+                    phone: client_pcehn
+                })
+                    .then(function (response) {
+                        if(response.data.success == true){
+                            console.log(response);
+                            localStorage['client_idx'] = response.data.client_idx;
+                            alert('Congratulations!!\n Your signup is complete');
+                            window.location.href = "client.html";
+                        } else {
+                            invalid('Signup failed, please try again')
+                        }
+                    })
+                    .catch(function (error) {
+                        invalid(error.toString());
+                        console.log(error);
+                    });
+
+                break;
+        }
+    }
+
+    function invalid(msg){
+        let output = `<div class="alert alert-danger" role="alert">${msg}</div>`;
+        $('#register-status').append(output);
+    }
+
+    $('#language').on('change',function(){
+        let language = $('#language').val();
+        let language_data = [];
+
+        for(let i=0; i<language.length; i++){
+            language_data.push({
+                language_name: language[i],
+                proficiency: ''
+            });
+        }
+        table = new Tabulator("#language-proficiency", {
+            height:100,
+            width: 300,// set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+            data: language_data, //assign data to table
+            layout:"fitColumns", //fit columns to width of table (optional)
+            columns:[ //Define Table Columns
+                {title:"Language Name", field:"language_name", width:150},
+                {title:"Proficiency", field:"proficiency", width:150, editor:"number", editorParams:{
+                        min:0,
+                        max:10,
+                        step:1,
+                    }
+                }
+            ]
+        });
+
+
+    });
+//     //get row data
+  //  var data = cell.getRow().getData();
+
+    /*
+        "email": email address,
+        "password": password,
+        "name": name,
+        "age": age (integer),
+	    "major": major,
+	    "phone": phone number (string),
+	    "experience": # of years of experience (integer),
+	    "languages": [
+            {
+                "language_idx": language idx,
+                "proficiency": proficiency from 0 ~ 10
+            },
+            ... (more languages)
+	        ]
+
+     */
+
+</script>
+</body>
+
+</html>

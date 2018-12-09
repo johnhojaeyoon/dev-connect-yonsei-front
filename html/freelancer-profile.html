@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>DevConnect</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Favicons -->
+    <link href="../img/favicon.png" rel="icon">
+    <link href="rsc/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700|Open+Sans:300,300i,400,400i,700,700i" rel="stylesheet">
+    <!-- Bootstrap CSS File -->
+    <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Main Stylesheet File -->
+    <link href="../css/signup.css" rel="stylesheet">
+    <style type="text/css">
+        .team {
+            color: green;
+            font-weight: bold;
+        }
+        .indiv{
+            color: red;
+            font-weight: bold;
+        }
+        .gradient-background {
+            background: #0575E6;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #021B79, #0575E6);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #021B79, #0575E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+
+        .vertical-center {
+            min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+            display: flex;
+            align-items: center;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+    </style>
+    <script type="text/javascript">
+        let freelancer_idx = localStorage.getItem('freelancer_idx');
+        let admin_key = localStorage.getItem('admin_key');
+        if(!admin_key){
+            if(!freelancer_idx){
+                alert('Access Denied');
+                window.location.href = 'access-denied.html';
+            }
+        }
+        let x = location.search;
+        function getUrlParams( prop ) {
+            let params = {};
+            let search = decodeURIComponent( window.location.href.slice( window.location.href.indexOf( '?' ) + 1 ) );
+            let definitions = search.split( '&' );
+
+            definitions.forEach( function( val, key ) {
+                let parts = val.split( '=', 2 );
+                params[ parts[ 0 ] ] = parts[ 1 ];
+            } );
+
+            return ( prop && prop in params ) ? params[ prop ] : params;
+        }
+
+        let params = getUrlParams(x);
+        freelancer_idx = params.idx;
+
+    </script>
+
+</head>
+
+<body>
+<header id="header" class="header-fixed">
+    <div class="container" style="width: 100%; height: 100%">
+        <div id="logo" class="pull-left">
+            <h1><a href="index.html" class="scrollto">DevConnect</a></h1>
+        </div>
+
+        <nav id="nav-menu-container">
+            <ul class="nav-menu">
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav><!-- #nav-menu-container -->
+    </div>
+</header><!-- #header -->
+
+<div class="jumbotron gradient-background" style="margin-top: 72px">
+    <h2 class="display-6" style="text-align: center; margin-bottom: 30px; color: white">Hello user, 0000@gmail.com</h2>
+    <div class="align-content-center">
+        <div class="row justify-content-md-center vertical-center">
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer.html'">Main</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer-profile.html'">Edit Profile</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer-add-project.html'">Add Project</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer-add-team.html'">Search Teams</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='freelancer-create-team.html'">Create Team</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" style="margin: 20px">
+    <form onsubmit="return false;">
+        <div class="row">
+            <div class="col">
+                <h2>Edit Profile</h2>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" value="0000@gmail.com" id="email" disabled>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="Name">Name</label>
+                        <input type="text" class="form-control" value="Johny Appleseed" id="name" >
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="***">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="password-reconfirm">Reconfirm Password</label>
+                        <input type="password" class="form-control" id="password-reconfirm" placeholder="***">
+                        <div class="invalid-feedback">
+                            Passwords don't match, try again
+                        </div>
+                        <div class="valid-feedback">
+                            Passwords match, good to go
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="major">Major</label>
+                        <input type="text" class="form-control" id="major" value="Computer Science">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="age">Age</label>
+                        <input type="number" class="form-control" id="age" value="25">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="yoe">Years of Experience</label>
+                        <input type="number" class="form-control" id="yoe" value="10">
+                    </div>
+                </div>
+
+                <button class="btn btn-outline-primary" onclick="modifyAccount()">Submit Changes</button>
+            </div>
+        </div>
+
+    </form>
+    <div id='loader' class="loader" style="margin: auto; z-index: 1; position: absolute; left: 40%; top: 50%; display: none"></div>
+
+</div>
+
+<script type="text/javascript">
+
+    /*
+     "admin_key": admin key,
+    "project_idx": project idx (REQUIRED),
+    "name": project name (OPTIONAL),
+    "start_date": start date (OPTIONAL),
+    "end_date": end date (OPTIONAL),
+    "min_part": # of minimum participants (OPTIONAL),
+    "max_part": # of maximum participants (OPTIONAL),
+    "experience": # years experience required (OPTIONAL),
+    "pay": pay in Korean Won (OPTIONAL),
+    "req_doc": blob of req document if exists (OPTIONAL)
+
+     */
+
+
+    function modifyAccount() {
+        let idx = freelancer_idx;
+        let pw = $('#password').val();
+        let major = $('#major').val();
+        let age = parseInt($('#age').val());
+        let experience = parseInt($('#yoe').val());
+        let name = $('#name').val();
+        if(params.type = 'freelancer'){
+            if($('#password').val()){
+                ajax.post('/freelancer/account/modify',{
+                    freelancer_idx: freelancer_idx,
+                    password: $('#password').val(),
+                    name: name,
+                    age: age,
+                    major: major,
+                    experience: experience
+                })
+                    .then(function(response){
+                        if(response.data.success){
+                            alert('successfully changed');
+                        } else{
+                            alert('oops, something went wrong');
+                        }
+                    })
+                    .catch(function(error){
+                        alert('Server Error');
+                        console.log(error);
+                    })
+
+            } else{
+                ajax.post('/freelancer/account/modify',{
+                    freelancer_idx: freelancer_idx,
+                    name: name,
+                    age: age,
+                    major: major,
+                    experience: experience
+                })
+                    .catch(function(response){
+
+                    })
+                    .then(function(error){
+
+                    })
+            }
+
+        }
+
+        if(params.type = 'admin'){
+            ajax.post('/admin/project/modify',{
+                idx: idx
+            })
+            .then(function(response){
+
+            })
+            .catch(function(error){
+
+                })
+        }
+
+    }
+
+    function getInfo(){
+        ajax.post('/freelancer/account/getInfo', {
+            freelancer_idx: freelancer_idx
+        })
+            .then(function(response){
+                if(response.data.success){
+                    let info = response.data.info;
+                    $('#email').attr('value',info.email);
+                    $('#name').attr('value',info.name);
+                    $('#age').attr('value',info.age);
+                    $('#major').attr('value',info.major);
+                    $('#phone').attr('value',info.phone);
+                    $('#yoe').attr('value',info.experience);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                alert('could not load data');
+            })
+    }
+
+    getInfo();
+
+</script>
+
+</body>
+</html>

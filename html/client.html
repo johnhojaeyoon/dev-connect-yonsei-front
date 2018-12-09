@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>DevConnect</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Favicons -->
+    <link href="../img/favicon.png" rel="icon">
+    <link href="../img/apple-touch-icon.png" rel="apple-touch-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700|Open+Sans:300,300i,400,400i,700,700i" rel="stylesheet">
+    <!-- Bootstrap CSS File -->
+    <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Main Stylesheet File -->
+    <link href="../css/signup.css" rel="stylesheet">
+    <style type="text/css">
+        .gradient-background {
+            background: #000000;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #434343, #000000);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #434343, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+
+        .in-progress{
+            background-color: lightgreen;
+            color: black;
+        }
+
+        .pending{
+            background-color: lightyellow;
+            color: black;
+        }
+
+        .finished{
+            background-color: lightpink;
+            color: black;
+        }
+
+        a:hover {
+            color: black;
+        }
+
+
+    </style>
+    <script type="text/javascript">
+        let client_idx = localStorage.getItem('client_idx');
+        if(!client_idx){
+            alert('Access Denied');
+            localStorage.clear();
+            window.location.href = 'access-denied.html';
+        }
+    </script>
+
+
+</head>
+
+<body>
+<header id="header" class="header-fixed">
+    <div class="container" style="width: 100%; height: 100%">
+        <div id="logo" class="pull-left">
+            <h1><a href="index.html" class="scrollto">DevConnect</a></h1>
+        </div>
+
+        <nav id="nav-menu-container">
+            <ul class="nav-menu">
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav><!-- #nav-menu-container -->
+    </div>
+</header><!-- #header -->
+
+<div class="jumbotron gradient-background" style="margin-top: 72px">
+    <h2 class="display-6" style="text-align: center; margin-bottom: 30px; color: white" id="client-name">Hello, Client</h2>
+    <div class="align-content-center">
+        <div class="row justify-content-md-center vertical-center">
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='client.html'">Main</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='client-profile.html'">Edit Profile</button></div>
+            <div class="col col-auto"><button class="btn btn-outline-warning" onclick="location.href='client-add-project.html'">Add Project</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <h4><strong>Requested Projects</strong></h4>
+    <hr>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Project ID</th>
+            <th scope="col">Project Name</th>
+            <th scope="col">StartDate</th>
+            <th scope="col">EndDate</th>
+            <th scope="col">Min/Max</th>
+            <th scope="col">Experience</th>
+            <th scope="col">Pay</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    const ajax = axios.create({
+        baseURL: 'https://dev-connect-yonsei.herokuapp.com/api',
+        headers: {'Access-Control-Allow-Origin': '*'}
+    });
+
+
+    $("a").on('click', function(e) {
+        let tr = $(this).closest("tr");
+        let tn = tr.children('th').text();
+        let url = 'project.html?projectName=' + tn;
+        location.href=url;
+    });
+
+    function loadClientProject() {
+
+        let html1 = "";
+        ajax.post('/client/project/getRegistered', {
+            client_idx: localStorage.getItem('client_idx')
+        })
+            .then(function (response) {
+                console.log(response);
+                if (response.data.success == true) {
+                    let html = '';
+                    let p_list = response.data.registered;
+
+                    for (let i = 0; i < p_list.length; i++) {
+                        let p_obj = p_list[i];
+                        html += `<tr><th scope="row">${p_obj.idx}</th><td>${p_obj.name}</td><td>${p_obj.start_date}</td><td>${p_obj.end_date}</td><td>${p_obj.min_part}/${p_obj.max_part}</td><td>${p_obj.experience}</td><td>${p_obj.pay}Won</td><td><a href="projcet.html?idx=${p_obj.idx}">Visit</a></td></thead>`;
+                    }
+                    html += '</tbody>';
+                    $('thead').append(html);
+
+                } else {
+                    invalid('Invalid ID / PW for Freelancer')
+                }
+
+            })
+            .catch(function (error) {
+                console.log(error);
+                invalid('Server Error');
+            });
+    }
+
+    function invalid(msg){
+        let output = `<div class="alert alert-danger" role="alert">${msg}</div>`;
+        $('#data-view').after(output);
+    }
+
+    loadClientProject();
+
+
+
+</script>
+</body>
+</html>
